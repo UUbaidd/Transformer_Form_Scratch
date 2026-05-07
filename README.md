@@ -8,3 +8,38 @@ Our get_stats and merge_vocab functions are part of tokenisation step. In get_st
 In second function which is merge_vocab, you are combining mostly occurred paired. If you take another example , for word {“N E W E S T”:1}, its pairs would be (N E):1 , (E W):1, (W E):1, (E S):1, (S, T):1. It would merge mostly occurred like NE W E S T: 1. In second iteration it would become (NE, W):1, (W, E):1, (E, S):1 , (S, T):1 so after merge_vocab function {“NEW E S T” :1}. This will go till last iteration and then in last iteration It would become (‘NEWES’ ’T’) -> {‘NEWEST’:1}
 
 As frequency of each pair is same so it will pick first one, otherwise it picks the word with highest frequency. 
+
+**Positional Embedding**
+Positional Embeddings:
+Then comes positional embeddings. Before this we generate embedding matrix and initialise it with random values. Then standard sinusoidal formula is :
+
+PE_(pos, 2i) = sin(pos / 10000^2i/d_model)
+PE_(pos, 2i+1) = cos(pos / 10000^2i/d_model)
+
+Pos -> it is position of a word, generated previously and in this formula it represents row
+2i  -> it represents col. We use it in loop so “I” represents iteration. For even positions we use 2i and for odd positions we use 2i+1. 
+We use sin and cos function, think of sin and cos and longitude and latitude of word. One represents longitude and second one represents latitude. By using one, we can’t find relative position of a word. The number 10000 represents wavelength. Scientist use this value because circle completes after very long run, means value does not repeat after short time. In some model it is 100000, 500000, so it depends on usage of model. D_model represents dimensions of model. 
+
+If we have eight values, the model with run of i=0-3 as in one iteration it fills two slots sin for odd and cos for even slot. 
+For example. Pos = 2, i=0 (slot 0 and 1), d_model = 8
+For i=0
+Q = pos/10000^2i/d_modle
+Q = 2/ 10000^0/8
+Q= 2
+Now:
+Slot 0: PE(2,0) = sin(2) 
+Slot 1: PE(2,1) = cos(2)
+Then i=1,2,3
+For i=3
+Q3 = 2/10000^6/8
+Q3 = 2/1000
+Q3 = 0.002
+Slot 6: PE(2,6) = sin(0.002)
+Slot 7: PE(2,7) = cos(0.002)
+
+PE for pos 2 = [sin(2), cos(2), ……., cos(0.002)]
+
+As these vector’s dimensions are same compare to word embedding matrix, so we perform element wise addition.
+
+Final Embedding = Word Embedding + Positional Embedding
+
