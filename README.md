@@ -9,7 +9,7 @@ In second function which is merge_vocab, you are combining mostly occurred paire
 
 As frequency of each pair is same so it will pick first one, otherwise it picks the word with highest frequency. 
 
-**Positional Embedding**
+**Positional Embedding:**
 Positional Embeddings:
 Then comes positional embeddings. Before this we generate embedding matrix and initialise it with random values. Then standard sinusoidal formula is :
 
