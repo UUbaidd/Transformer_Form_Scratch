@@ -14,6 +14,7 @@ Positional Embeddings:
 Then comes positional embeddings. Before this we generate embedding matrix and initialise it with random values. Then standard sinusoidal formula is :
 
 PE_(pos, 2i) = sin(pos / 10000^2i/d_model)
+
 PE_(pos, 2i+1) = cos(pos / 10000^2i/d_model)
 
 Pos -> it is position of a word, generated previously and in this formula it represents row
