@@ -68,3 +68,27 @@ We also use masking here using lower triangular matrix, where all values above d
 
 At the end of this layer we again reshape and transpose values to convert them back to their original position. If we do not do it, the rest of NN will not be able to process it. 
 
+**FeedForward Neural Network:**
+
+After MHA layer we have FFNN. This is like second brain of model after Attention layer. In this layer we increase dimensions of vector so that model can learn more complex things. In our code it can be shown by line d_ff = d_model * 4. Here we are expanding dimension. Then we expand the data. If our word is represented by 512 dimensions, now hidden layer converted it into 2048 values by line
+**hidden = np.maximum(0, np.dot(x, self.W1) + self.b1)**
+Then we have relu function. This introduces non linearity. It converts negative values into zero.
+Then at the end we shrink demotions back to original. Lets suppose we have 10 words, 512 demotions. 
+
+(10,512).(512,2048)
+This 2048 came from d_model*4
+Inner dimensions are same so we get
+
+(10,2048)
+
+Let’s think model has learnt complex things and Now we will shrink it back. 
+
+(10,2048).(2048,512)
+(10,512).
+
+**Transformer Block:**
+
+After MHA layer we add output of Attention layer back to input of attention layer. Also for FFNN we add output of FFNN back to input of FFNN.  This process is called residual connections or skip connections. Without this training a model with many layers would be impossible. It solves vanishing gradient problem, preserves identity, features refinement. 
+
+
+
