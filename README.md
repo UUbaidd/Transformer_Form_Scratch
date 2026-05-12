@@ -1,15 +1,18 @@
 This is transformer from scratch. Transformer’s first step is tokenisation. In this model we use BPE (Byte Pair Encoding) tokenisation model. The main reason for using it is that it solves unknown , subwords, words problems which you usually face in other tokenisation models. 
 
 **Pre Tokenisation:**
+
 Pre tokenisation is a step where we split our text by whitespaces to get individual words and count their occurrences. If word “NEW” comes five times in a text, it becomes {’N E W <\w>’:5}. We add <\w> at the end of each word, which represents end of word. 
 
 **Tokenisation:**
+
 Our get_stats and merge_vocab functions are part of tokenisation step. In get_stats function we gets words and their count in pairs. Like if we have “E A T”: 2. It mean word EAT occurred two times. Now for tokenisation it becomes (E, A):2, (A, T):2, this is what get_stats function is doing. 
 In second function which is merge_vocab, we are combining mostly occurred paired. If we take another example of word {“N E W E S T”:1}, its pairs would be (N E):1 , (E W):1, (W E):1, (E S):1, (S, T):1. It would merge mostly occurred like NE W E S T: 1. For second iteration it would become (NE, W):1, (W, E):1, (E, S):1 , (S, T):1 so after merge_vocab function {“NEW E S T” :1}. This will go till last iteration and then for last iteration it becomes (‘NEWES’ ’T’) -> {‘NEWEST’:1}
 
 As frequency of each pair is same so it will pick first one, otherwise it picks the word with highest frequency. 
 
 **Positional Embedding:**
+
 Then comes positional embeddings. Before this we generate embedding matrix and initialise it with random values. The standard sinusoidal formula is :
 
 **PE_(pos, 2i) = sin(pos / 10000^2i/d_model)**
