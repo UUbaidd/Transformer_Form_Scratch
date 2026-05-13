@@ -15,9 +15,9 @@ As frequency of each pair is same so it will pick first one, otherwise it picks 
 
 Then comes positional embeddings. Before this we generate embedding matrix and initialise it with random values. The standard sinusoidal formula is :
 
-**PE_(pos, 2i) = sin(pos / 10000^2i/d_model)**
+  **PE_(pos, 2i) = sin(pos / 10000^2i/d_model)**
 
-**PE_(pos, 2i+1) = cos(pos / 10000^2i/d_model)**
+  **PE_(pos, 2i+1) = cos(pos / 10000^2i/d_model)**
 
 Pos -> it is position of a word, generated previously and it represents row
 2i  -> it represents col. We use it in loop so “I” represents iteration. For even positions we use 2i and for odd positions we use 2i+1. 
@@ -44,7 +44,7 @@ PE for pos 2 = [sin(2), cos(2),..........,sin(0.002),cos(0.002)]
 
 As these vector’s dimensions are same compare to word embedding matrix, so we perform element wise addition.
 
-**Final Embedding = Word Embedding + Positional Embedding**
+  **Final Embedding = Word Embedding + Positional Embedding**
 
 **Attention Layer:**
 
@@ -65,7 +65,7 @@ Then we reshape our input and take transpose it because it takes last two values
 
 Then we calculate dot product of Q, K, V and calculate their scores using matrix multiplication. The formula is :
 
-**Score = softmax( ( (Q.K^transpose) / sqrt(d_model) ).V )**
+  **Score = softmax( ( (Q.K^transpose) / sqrt(d_model) ).V )**
 
 We also use masking here using lower triangular matrix, where all values above diagonal will be hidden and for each next word input will  be all previous words. 
 
@@ -74,7 +74,9 @@ At the end of this layer we again reshape and transpose values to convert them b
 **FeedForward Neural Network:**
 
 After MHA layer we have FFNN. This is like second brain of model after Attention layer. In this layer we increase dimensions of vector so that model can learn more complex things. In our code it can be shown by line d_ff = d_model * 4. Here we are expanding dimension. Then we expand the data. If our word is represented by 512 dimensions, now hidden layer converted it into 2048 values by line
-**hidden = np.maximum(0, np.dot(x, self.W1) + self.b1)**
+
+  **hidden = np.maximum(0, np.dot(x, self.W1) + self.b1)**
+
 Then we have relu function. This introduces non linearity. It converts negative values into zero.
 Then at the end we shrink demotions back to original. Lets suppose we have 10 words, 512 demotions. 
 
@@ -92,6 +94,17 @@ Let’s think model has learnt complex things and Now we will shrink it back.
 **Transformer Block:**
 
 After MHA layer we add output of Attention layer back to input of attention layer. Also for FFNN we add output of FFNN back to input of FFNN.  This process is called residual connections or skip connections. Without this training a model with many layers would be impossible. It solves vanishing gradient problem, preserves identity, features refinement. 
+
+**Language Model**
+Now at the end we have LanguageModel class. This is final step where we generate output. It is where we combine all those layers to generate output. 
+
+In this class we generated embedding matrix (already discussed). First we replace token id with 512 dimensional vector. Then it does positional embeddings. As our model expects data in batch form, so we turn shape of sentence into shape of batch. Then we apply masking (already discussed). Then data enters into the transformer block. Then we gets raw score for our possible word in our dictionary. 
+
+Raw logits are hard to work with so we use softmax function to convert them in readable form. Then we get matrix where every row sums to 1.0. For example. 
+
+  **{“the”:0.5, “car”:0.5}**
+
+Then model picks one token from that list and print out on the scree. 
 
 
 
