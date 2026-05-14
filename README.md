@@ -106,5 +106,45 @@ Raw logits are hard to work with so we use softmax function to convert them in r
 
 Then model picks one token from that list and print out on the scree. 
 
+**RoPE( Rotational Positional Embedding):**
+
+The original Sinusoidal method add portions to WE (word embedding), RoPE rotates the positional embedding. It is used in models like Llama 3, Mistral, Gemini. It concepts is when we rotate two words, if their rotation angle is similar then they are close together. They are far apart, if their rotation angle is different. Let’s see its working:
+
+If word embedding is a 128 dimensional vector. Rope breaks it into half, 64 pairs of numbers. For example:
+ 
+   **( x1 , x 2) , (x 3 , x 4) ,………., (x 127 , x 128)**
+
+Each pair represents a point on x-y axis. (2D plane). We rotate that point around the (0 , 0) based on its position in sentence. If word “Money” is at position 1, we rotate it by 1* θ. If it is at position 10, we rotate it by 10 * θ. 
+
+So a pair (x 1, x 2) becomes, z = x1 + ix2
+
+Rotation z by angle mθ is done by e^imθ (Euler’s formula)
+
+   **e^imθ = cos(mθ) + isin(mθ)**
+
+When multiplying embedding vectors: 
+
+   **(X 1, x 2).cos(mθ) + isin(mθ)**
+
+This becomes: 
+  **$$
+\begin{pmatrix} 
+x_1^{(m)} \\ 
+x_2^{(m)} 
+\end{pmatrix} = 
+\begin{pmatrix} 
+\cos m\theta & -\sin m\theta \\ 
+\sin m\theta & \cos m\theta 
+\end{pmatrix} 
+\begin{pmatrix} 
+x_1 \\ 
+x_2 
+\end{pmatrix}
+$$**
+
+As Sinusoidal method finds coordinates of word, RoPE finds angle between words. 
+
+
+
 
 
