@@ -127,6 +127,7 @@ When multiplying embedding vectors:
    **(X 1, x 2).cos(mθ) + isin(mθ)**
 
 This becomes: 
+
   **$$
 \begin{pmatrix} 
 x_1^{(m)} \\ 
